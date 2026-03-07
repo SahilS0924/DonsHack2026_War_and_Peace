@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@theme {
+  /* Custom fonts — use font-mono / font-orbitron as Tailwind classes */
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-orbitron: 'Orbitron', monospace;
+
+  /* Custom colors — use as bg-toxred, text-toxorange, etc. */
+  --color-toxred:    #ff2d2d;
+  --color-toxorange: #ff6b00;
+  --color-toxyellow: #ffd700;
+  --color-toxgreen:  #00ff88;
+  --color-toxbg:     #0a0a0a;
+  --color-toxborder: #1a1a1a;
+}
+
+/* Base reset */
+html, body, #app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+/* Remove MapLibre default logo */
+.maplibregl-ctrl-logo { display: none !important; }
+.maplibregl-ctrl-attrib { display: none !important; }
+
+/* Scanline CRT overlay — applied via <div class="scanline-overlay"> in App.svelte */
+.scanline-overlay {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Strike marker pulse animations */
+@keyframes pulse {
+  0%   { transform: scale(1);   opacity: 1; }
+  50%  { transform: scale(1.6); opacity: 0.6; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+.strike-marker  { animation: pulse 2.0s ease-in-out infinite; }
+.missile-marker { animation: pulse 2.5s ease-in-out infinite; }
+.drone-marker   { animation: pulse 3.0s ease-in-out infinite; }
+
+/* MapLibre popup overrides */
+.aqi-popup .maplibregl-popup-content {
+  background: #0a0a0a !important;
+  border: 1px solid #333 !important;
+  color: #ccc !important;
+  font-family: 'Share Tech Mono', monospace !important;
+  font-size: 11px !important;
+  padding: 6px 10px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.aqi-popup .maplibregl-popup-tip {
+  border-top-color: #333 !important;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #1a1a1a; }
+::-webkit-scrollbar-thumb:hover { background: #333; }
