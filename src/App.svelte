@@ -16,7 +16,7 @@
   let allEvents = $state([])
   let filteredEvents = $state([])
   let selectedEvent = $state(null)
-  let map = $state(null)
+  let map = $state.raw(null)
 
   function enrichEvents(raw) {
     return raw.map(e => {
@@ -40,7 +40,7 @@
   })
 </script>
 
-<div class="fixed inset-0 bg-[#0a0a0a] overflow-hidden font-mono">
+<div class="fixed inset-0 bg-[#0a0a0a] font-mono">
   <MapContainer bind:map />
 
   {#if map}

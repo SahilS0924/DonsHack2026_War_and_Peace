@@ -124,16 +124,21 @@
     })
 
     const pending = evts.filter(e => !plumeCache.has(e.event_id))
-    await Promise.allSettled(pending.map(async event => {
-      try {
-        const wind = await fetchWind(event)
-        event.wind = wind
-        event.plumeLength = wind.windSpeed * 3
-        event.citiesInPlume = citiesInPlume(event)
-        windCache.set(event.event_id, { wind: event.wind, plumeLength: event.plumeLength, citiesInPlume: event.citiesInPlume })
-        plumeCache.set(event.event_id, buildPlumeFeature(event))
-      } catch {}
-    }))
+    // Stagger requests to avoid Open-Meteo rate limiting (max ~5 concurrent)
+    for (let i = 0; i < pending.length; i += 5) {
+      const batch = pending.slice(i, i + 5)
+      await Promise.allSettled(batch.map(async event => {
+        try {
+          const wind = await fetchWind(event)
+          event.wind = wind
+          event.plumeLength = wind.windSpeed * 3
+          event.citiesInPlume = citiesInPlume(event)
+          windCache.set(event.event_id, { wind: event.wind, plumeLength: event.plumeLength, citiesInPlume: event.citiesInPlume })
+          plumeCache.set(event.event_id, buildPlumeFeature(event))
+        } catch {}
+      }))
+      if (i + 5 < pending.length) await new Promise(r => setTimeout(r, 300))
+    }
     updateLayer()
     processing = false
   }

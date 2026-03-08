@@ -4,4 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [svelte(), tailwindcss()],
+  resolve: {
+    conditions: ['browser', 'svelte', 'module'],
+  },
 })
