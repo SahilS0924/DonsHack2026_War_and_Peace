@@ -43,8 +43,11 @@
   }
 
   function onMouseDown(e) {
-    isDragging = true
-    updateFromClientX(e.clientX)
+    // Only start dragging if the event is on the slider track or handle
+    if (e.target === trackEl || e.target.closest('.timeline-handle')) {
+      isDragging = true
+      updateFromClientX(e.clientX)
+    }
   }
 
   function onMouseMove(e) {
@@ -57,8 +60,10 @@
   }
 
   function onTouchStart(e) {
-    isDragging = true
-    updateFromClientX(e.touches[0].clientX)
+    if (e.target === trackEl || e.target.closest('.timeline-handle')) {
+      isDragging = true
+      updateFromClientX(e.touches[0].clientX)
+    }
   }
 
   function onTouchMove(e) {
@@ -103,7 +108,7 @@
     <div class="absolute top-0 left-0 h-full bg-[#ff2d2d]" style="width: {pct * 100}%"></div>
 
     <div
-      class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-[#ff2d2d] border-2 border-[#0a0a0a] cursor-grab active:cursor-grabbing"
+      class="timeline-handle absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-[#ff2d2d] border-2 border-[#0a0a0a] cursor-grab active:cursor-grabbing"
       style="left: {pct * 100}%"
     ></div>
   </div>

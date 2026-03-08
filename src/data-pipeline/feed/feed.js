@@ -39,9 +39,9 @@ function parseEvents(raw) {
   if (!Array.isArray(raw)) return []
   return raw
     .filter((e) => {
-      const lat = e._osint_meta?.coordinates?.lat
-      const lng = e._osint_meta?.coordinates?.lng
-      return lat != null && lng != null
+      const lat = parseFloat(e._osint_meta?.coordinates?.lat)
+      const lng = parseFloat(e._osint_meta?.coordinates?.lng)
+      return !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0
     })
     .map((e) => ({
       event_id: e.event_id,
