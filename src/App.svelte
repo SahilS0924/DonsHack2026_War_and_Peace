@@ -17,6 +17,13 @@
   let filteredEvents = $state([])
   let selectedEvent = $state(null)
   let map = $state.raw(null)
+  let windDataMap = $state({})
+
+  let selectedEventWithWind = $derived(
+    selectedEvent
+      ? { ...selectedEvent, ...(windDataMap[selectedEvent.event_id] ?? {}) }
+      : null
+  )
 
   function enrichEvents(raw) {
     return raw.map(e => {
@@ -44,7 +51,7 @@
   <MapContainer bind:map />
 
   {#if map}
-    <PlumeEngine {map} events={allEvents} />
+    <PlumeEngine {map} events={allEvents} onPlumeData={(id, data) => windDataMap = { ...windDataMap, [id]: data }} />
     <AqiHalos {map} />
     <NasaFires {map} />
     <StrikeMarkers {map} events={filteredEvents} onMarkerClick={(e) => selectedEvent = e} />
@@ -52,7 +59,7 @@
 
   <Header events={filteredEvents} />
   <Sidebar events={filteredEvents} {map} onEventClick={(e) => selectedEvent = e} />
-  <DetailPanel event={selectedEvent} onClose={() => selectedEvent = null} />
+  <DetailPanel event={selectedEventWithWind} onClose={() => selectedEvent = null} />
   <Timeline {allEvents} onFilter={(f) => filteredEvents = f} />
 
   <div class="scanline-overlay" aria-hidden="true"></div>

@@ -1,7 +1,7 @@
 <script>
   import { onMount, onDestroy } from 'svelte'
 
-  let { map, events = [] } = $props()
+  let { map, events = [], onPlumeData = () => {} } = $props()
 
   const CITIES = [
     { name: "Tehran",      lat: 35.6892, lng: 51.3890, population: 9_200_000 },
@@ -135,6 +135,7 @@
           event.citiesInPlume = citiesInPlume(event)
           windCache.set(event.event_id, { wind: event.wind, plumeLength: event.plumeLength, citiesInPlume: event.citiesInPlume })
           plumeCache.set(event.event_id, buildPlumeFeature(event))
+          onPlumeData(event.event_id, { wind: event.wind, plumeLength: event.plumeLength, citiesInPlume: event.citiesInPlume })
         } catch {}
       }))
       if (i + 5 < pending.length) await new Promise(r => setTimeout(r, 300))
