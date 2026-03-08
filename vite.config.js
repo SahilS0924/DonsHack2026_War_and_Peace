@@ -2,9 +2,9 @@ import { defineConfig } from 'vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import tailwindcss from '@tailwindcss/vite'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [svelte(), tailwindcss()],
   resolve: {
-    conditions: ['browser', 'svelte', 'module'],
+    conditions: ['module', 'browser', mode, 'svelte'],
   },
-})
+}))
