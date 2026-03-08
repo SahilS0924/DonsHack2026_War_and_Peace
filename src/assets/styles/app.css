@@ -1,20 +1,30 @@
+/*
+ * TOXMAP — Global Styles
+ * ======================
+ * All styles live here. Imported once in src/main.js.
+ * Design: military situation room — cold, clinical, no rounded corners.
+ */
+
 @import "tailwindcss";
 
+/* ── THEME: Fonts & colors (Tailwind v4 @theme) ─────────────────────────────
+ * These become utility classes: font-mono, text-toxred, bg-toxorange, etc.
+ * (Tailwind v4 at-rule — linters may flag it; safe to ignore)
+ */
+/* stylelint-disable-next-line at-rule-no-unknown */
 @theme {
-  /* Custom fonts — use font-mono / font-orbitron as Tailwind classes */
   --font-mono: 'Share Tech Mono', monospace;
   --font-orbitron: 'Orbitron', monospace;
 
-  /* Custom colors — use as bg-toxred, text-toxorange, etc. */
-  --color-toxred:    #ff2d2d;
-  --color-toxorange: #ff6b00;
-  --color-toxyellow: #ffd700;
-  --color-toxgreen:  #00ff88;
-  --color-toxbg:     #0a0a0a;
-  --color-toxborder: #1a1a1a;
+  --color-toxred:    #ff2d2d;   /* Airstrikes */
+  --color-toxorange: #ff6b00;   /* Missiles, CO₂, chemicals */
+  --color-toxyellow: #ffd700;   /* Drones */
+  --color-toxgreen:  #00ff88;   /* Interceptions */
+  --color-toxbg:     #0a0a0a;   /* Background everywhere */
+  --color-toxborder: #1a1a1a;   /* Panel borders */
 }
 
-/* Base reset */
+/* ── BASE: Full viewport, no scroll on body ───────────────────────────────── */
 html, body, #app {
   width: 100%;
   height: 100%;
@@ -22,11 +32,14 @@ html, body, #app {
   background: #0a0a0a;
 }
 
-/* Remove MapLibre default logo */
+/* ── MAPLIBRE: Hide default branding ──────────────────────────────────────── */
 .maplibregl-ctrl-logo { display: none !important; }
 .maplibregl-ctrl-attrib { display: none !important; }
 
-/* Scanline CRT overlay — applied via <div class="scanline-overlay"> in App.svelte */
+/* ── SCANLINE: CRT monitor effect overlay ───────────────────────────────────
+ * Applied via <div class="scanline-overlay"> in App.svelte.
+ * pointer-events: none so clicks pass through. z-index 9999 = on top of all UI.
+ */
 .scanline-overlay {
   position: fixed;
   inset: 0;
@@ -41,7 +54,9 @@ html, body, #app {
   z-index: 9999;
 }
 
-/* Strike marker pulse animations */
+/* ── STRIKE MARKERS: Pulsing dots on the map ─────────────────────────────────
+ * Used by StrikeMarkers.svelte. Different speeds per type for variety.
+ */
 @keyframes pulse {
   0%   { transform: scale(1);   opacity: 1; }
   50%  { transform: scale(1.6); opacity: 0.6; }
@@ -52,7 +67,19 @@ html, body, #app {
 .missile-marker { animation: pulse 2.5s ease-in-out infinite; }
 .drone-marker   { animation: pulse 3.0s ease-in-out infinite; }
 
-/* MapLibre popup overrides */
+/* ── FIRE DOTS: NASA FIRMS satellite fire detections ────────────────────────
+ * For HTML fire markers. NasaFires.svelte uses MapLibre circles + JS flicker;
+ * this class is available if you ever render fire points as HTML elements.
+ */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  25%      { opacity: 0.4; }
+  75%      { opacity: 0.8; }
+}
+
+.fire-dot { animation: flicker 0.8s ease-in-out infinite; }
+
+/* ── MAPLIBRE POPUPS: AQI tooltips — match ToxMap aesthetic ────────────────── */
 .aqi-popup .maplibregl-popup-content {
   background: #0a0a0a !important;
   border: 1px solid #333 !important;
@@ -68,7 +95,9 @@ html, body, #app {
   border-top-color: #333 !important;
 }
 
-/* Scrollbar styling */
+/* ── SCROLLBARS: Subtle dark scrollbar for sidebar/detail panel ─────────────
+ * WebKit only (Chrome, Safari). Firefox uses overlay scrollbars by default.
+ */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: #0a0a0a; }
 ::-webkit-scrollbar-thumb { background: #1a1a1a; }
