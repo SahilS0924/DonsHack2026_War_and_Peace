@@ -62,7 +62,8 @@ export async function loadFeed() {
   try {
     const res = await fetch('https://iranwarlive.com/feed.json')
     if (!res.ok) throw new Error('fetch failed')
-    raw = await res.json()
+    const json = await res.json()
+    raw = Array.isArray(json) ? json : (json?.items ?? [])
   } catch {
     raw = BUNDLED_FEED_DATA
   }

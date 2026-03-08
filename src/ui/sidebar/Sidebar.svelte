@@ -1,8 +1,6 @@
 <script>
   let { events = [], map, onEventClick } = $props()
 
-  let activeFilter = $state('ALL')
-
   const FILTERS = [
     { label: 'ALL', value: 'ALL' },
     { label: 'AIR', value: 'airstrike' },
@@ -11,18 +9,20 @@
     { label: 'INTER', value: 'intercept' },
   ]
 
-  let visibleEvents = $derived(
-    activeFilter === 'ALL' ? events : events.filter((e) => getTypeGroup(e.type) === activeFilter)
-  )
+  let activeFilter = $state('ALL')
 
   function getTypeGroup(type) {
     const t = (type || '').toLowerCase()
-    if (t.includes('airstrike') || t.includes('air strike') || t.includes('bombardment')) return 'airstrike'
-    if (t.includes('missile') || t.includes('ballistic') || t.includes('naval')) return 'missile'
+    if (t.includes('airstrike') || t.includes('air strike') || t.includes('bombardment') || t.includes('bombing')) return 'airstrike'
+    if (t.includes('missile') || t.includes('ballistic') || t.includes('projectile') || t.includes('naval')) return 'missile'
     if (t.includes('drone')) return 'drone'
     if (t.includes('intercept') || t.includes('defensive')) return 'intercept'
     return 'other'
   }
+
+  let visibleEvents = $derived(
+    activeFilter === 'ALL' ? events : events.filter((e) => getTypeGroup(e.type) === activeFilter)
+  )
 
   function getTypeColor(type) {
     const colors = {
