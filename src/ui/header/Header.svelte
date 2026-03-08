@@ -55,6 +55,10 @@
     CO₂e: <span class="text-[#ccc]">{fmt(co2Totals.tonnes)}</span> TONNES
   </span>
 
+  <span class="text-[#444] uppercase tracking-wide">
+    MUNITIONS ONLY
+  </span>
+
   <span class="text-[#555] uppercase tracking-wide">
     <span class="text-[#ccc]">{equivalency}</span>
   </span>

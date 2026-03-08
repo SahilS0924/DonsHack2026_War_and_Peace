@@ -65,7 +65,7 @@
         ▸ {event.type?.toUpperCase() ?? 'EVENT'}
       </div>
       <div class="text-[#ddd] text-[13px] mb-0.5">{location}</div>
-      <div class="text-[#444] text-[10px] mb-3">{timestamp} UTC</div>
+      <div class="text-[#444] text-[10px] mb-3">{timestamp}</div>
 
       <div class="border-t border-[#1a1a1a] mb-3"></div>
 

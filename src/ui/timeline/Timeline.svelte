@@ -2,19 +2,27 @@
   let { allEvents = [], onFilter } = $props()
 
   const START_DATE = new Date('2026-02-28T00:00:00Z')
-  const END_DATE = new Date()
 
   let pct = $state(1)
   let trackEl = $state(null)
   let isDragging = $state(false)
 
+  function getEndDate() {
+    const latestEventMs = allEvents.reduce((maxMs, event) => {
+      const ts = new Date(event.timestamp).getTime()
+      return Number.isNaN(ts) ? maxMs : Math.max(maxMs, ts)
+    }, START_DATE.getTime())
+    return new Date(Math.max(Date.now(), latestEventMs))
+  }
+
   let dayLabels = $derived(
     (() => {
       const labels = []
       let d = new Date(START_DATE)
+      const endDate = getEndDate()
       const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']
-      while (d <= END_DATE) {
-        const p = ((d - START_DATE) / (END_DATE - START_DATE)) * 100
+      while (d <= endDate) {
+        const p = ((d - START_DATE) / (endDate - START_DATE)) * 100
         labels.push({ label: `${months[d.getUTCMonth()]} ${d.getUTCDate()}`, pct: p })
         d = new Date(d.getTime() + 24 * 60 * 60 * 1000)
       }
@@ -23,7 +31,8 @@
   )
 
   $effect(() => {
-    const cutoff = new Date(START_DATE.getTime() + pct * (END_DATE - START_DATE))
+    const endDate = getEndDate()
+    const cutoff = new Date(START_DATE.getTime() + pct * (endDate - START_DATE))
     onFilter?.(allEvents.filter((e) => new Date(e.timestamp) <= cutoff))
   })
 
