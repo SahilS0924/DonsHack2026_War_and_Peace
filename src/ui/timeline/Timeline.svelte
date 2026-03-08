@@ -6,7 +6,6 @@
 
   let pct = $state(1)
   let trackEl = $state(null)
-  let isDragging = $state(false)
 
   let dayLabels = $derived(
     (() => {
@@ -34,26 +33,21 @@
   }
 
   function onMouseDown(e) {
-    isDragging = true
     updateFromClientX(e.clientX)
   }
 
   function onMouseMove(e) {
-    if (!isDragging) return
+    if (e.buttons !== 1) return
     updateFromClientX(e.clientX)
   }
 
-  function onMouseUp() {
-    isDragging = false
-  }
+  function onMouseUp() {}
 
   function onTouchStart(e) {
-    isDragging = true
     updateFromClientX(e.touches[0].clientX)
   }
 
   function onTouchMove(e) {
-    if (!isDragging) return
     e.preventDefault()
     updateFromClientX(e.touches[0].clientX)
   }
