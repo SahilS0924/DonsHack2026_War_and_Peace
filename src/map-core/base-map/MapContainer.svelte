@@ -14,8 +14,11 @@
       zoom: 5,
       attributionControl: false,
     })
+    map.on('error', (e) => console.error('[MapLibre error]', e.error))
     return () => map?.remove()
   })
 </script>
 
-<div bind:this={container} class="fixed inset-0 z-[1]"></div>
+<div class="fixed inset-0 z-[1]">
+  <div bind:this={container} style="width:100%;height:100%;"></div>
+</div>

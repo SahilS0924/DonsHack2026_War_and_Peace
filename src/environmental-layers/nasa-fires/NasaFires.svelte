@@ -3,7 +3,7 @@
 
   let { map } = $props()
 
-  const FIRMS_URL = 'https://firms.modaps.eosdis.nasa.gov/api/area/csv/38c7346b9d2d11a4e9a5de249c3d622/VIIRS_SNPP_NRT/44,24,64,40/5'
+  const FIRMS_URL = 'https://firms.modaps.eosdis.nasa.gov/api/area/csv/38c7346b9d2d11a4e9a5de249c3d622/VIIRS_SNPP_NRT/44,24,64,40/7'
   const SOURCE_ID = 'nasa-fires'
   const LAYER_ID = 'fires-circle'
 
