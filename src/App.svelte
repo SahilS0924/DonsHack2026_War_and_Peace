@@ -16,7 +16,8 @@
   let allEvents = $state([])
   let filteredEvents = $state([])
   let selectedEvent = $state(null)
-  let map = $state(null)
+  let map = $state.raw(null)
+  let plumeMetaById = $state({})
 
   function enrichEvents(raw) {
     return raw.map((e) => {
@@ -34,28 +35,42 @@
       try {
         const fresh = await loadFeed()
         allEvents = enrichEvents(fresh)
+        filteredEvents = allEvents
       } catch {}
     }, 30 * 60 * 1000)
   })
+
+  let displayEvents = $derived(
+    filteredEvents.map((event) => ({
+      ...event,
+      ...(plumeMetaById[event.event_id] ?? {}),
+    }))
+  )
+
+  let selectedDisplayEvent = $derived(
+    selectedEvent
+      ? { ...selectedEvent, ...(plumeMetaById[selectedEvent.event_id] ?? {}) }
+      : null
+  )
 </script>
 
 <div class="fixed inset-0 bg-[#0a0a0a] font-mono overflow-hidden">
   <MapContainer bind:map />
 
   {#if map}
-    <PlumeEngine {map} events={filteredEvents} />
+    <PlumeEngine {map} events={filteredEvents} onPlumeData={(meta) => (plumeMetaById = meta)} />
     <AqiHalos {map} />
     <NasaFires {map} />
     <StrikeMarkers
       {map}
-      events={filteredEvents}
+      events={displayEvents}
       onMarkerClick={(e) => (selectedEvent = e)}
     />
   {/if}
 
-  <Header events={filteredEvents} />
-  <Sidebar events={filteredEvents} {map} onEventClick={(e) => (selectedEvent = e)} />
-  <DetailPanel event={selectedEvent} onClose={() => (selectedEvent = null)} />
+  <Header events={displayEvents} />
+  <Sidebar events={displayEvents} {map} onEventClick={(e) => (selectedEvent = e)} />
+  <DetailPanel event={selectedDisplayEvent} onClose={() => (selectedEvent = null)} />
   <Timeline allEvents={allEvents} onFilter={(f) => (filteredEvents = f)} />
 
   <div class="scanline-overlay" aria-hidden="true"></div>

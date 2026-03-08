@@ -5,6 +5,7 @@
 
   const SOURCE_ID = 'aqi-halos'
   const LAYER_ID = 'aqi-halos-fill'
+  const OUTLINE_LAYER_ID = 'aqi-halos-outline'
   const TOKEN = 'c1e8f5369c003f851d54fb2792e9053978ac3b9e'
 
   const CITIES = [
@@ -64,8 +65,16 @@
         paint: {
           'fill-color': ['get', 'color'],
           'fill-opacity': 0.12,
-          'fill-outline-color': ['get', 'color'],
-          'fill-outline-opacity': 0.5,
+        },
+      })
+      map.addLayer({
+        id: OUTLINE_LAYER_ID,
+        type: 'line',
+        source: SOURCE_ID,
+        paint: {
+          'line-color': ['get', 'color'],
+          'line-opacity': 0.5,
+          'line-width': 1,
         },
       })
     }
@@ -96,6 +105,7 @@
   onDestroy(() => {
     if (pollTimer) clearInterval(pollTimer)
     try {
+      if (map?.getLayer(OUTLINE_LAYER_ID)) map.removeLayer(OUTLINE_LAYER_ID)
       if (map?.getLayer(LAYER_ID)) map.removeLayer(LAYER_ID)
       if (map?.getSource(SOURCE_ID)) map.removeSource(SOURCE_ID)
     } catch {}
