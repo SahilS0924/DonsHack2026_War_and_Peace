@@ -18,6 +18,9 @@
   let selectedEvent = $state(null)
   let map = $state.raw(null)
   let windDataMap = $state({})
+  let lastStrikesFetch = $state(null)
+  let lastFiresFetch = $state(null)
+  let lastAqiFetch = $state(null)
 
   let selectedEventWithWind = $derived(
     selectedEvent
@@ -33,15 +36,19 @@
   }
 
   onMount(async () => {
-    const raw = await loadFeed()
-    allEvents = enrichEvents(raw)
-    filteredEvents = allEvents
+    try {
+      const raw = await loadFeed()
+      allEvents = enrichEvents(raw)
+      filteredEvents = allEvents
+      lastStrikesFetch = Date.now()
+    } catch {}
 
     setInterval(async () => {
       try {
         const fresh = await loadFeed()
         allEvents = enrichEvents(fresh)
         filteredEvents = allEvents
+        lastStrikesFetch = Date.now()
       } catch {}
     }, 30 * 60 * 1000)
   })
@@ -52,12 +59,12 @@
 
   {#if map}
     <PlumeEngine {map} events={allEvents} onPlumeData={(id, data) => windDataMap = { ...windDataMap, [id]: data }} />
-    <AqiHalos {map} />
-    <NasaFires {map} />
+    <AqiHalos {map} onAqiLoad={() => lastAqiFetch = Date.now()} />
+    <NasaFires {map} onFiresLoad={() => lastFiresFetch = Date.now()} />
     <StrikeMarkers {map} events={filteredEvents} onMarkerClick={(e) => selectedEvent = e} />
   {/if}
 
-  <Header events={filteredEvents} />
+  <Header events={filteredEvents} {lastStrikesFetch} {lastFiresFetch} {lastAqiFetch} />
   <Sidebar events={filteredEvents} {map} onEventClick={(e) => selectedEvent = e} />
   <DetailPanel event={selectedEventWithWind} onClose={() => selectedEvent = null} />
   <Timeline {allEvents} onFilter={(f) => filteredEvents = f} />

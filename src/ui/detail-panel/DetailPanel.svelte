@@ -14,6 +14,17 @@
     return new Date(ts).toUTCString()
   }
 
+  function inferActor(summary = '') {
+    const s = summary.toLowerCase()
+    if (s.includes('idf') || s.includes('israeli') || s.includes('israel')) return 'Israel (IDF)'
+    if (s.includes('irgc') || (s.includes('iran') && !s.includes('iranian-backed'))) return 'Iran (IRGC)'
+    if (s.includes('centcom') || s.includes('u.s.') || s.includes('american') || s.includes('pentagon')) return 'United States'
+    if (s.includes('hezbollah')) return 'Hezbollah'
+    if (s.includes('houthi') || s.includes('ansar allah')) return 'Houthi / Ansar Allah'
+    if (s.includes('hamas')) return 'Hamas'
+    return null
+  }
+
   let color = $derived(getColor(event?.type))
   let visible = $derived(event !== null)
 </script>
@@ -50,6 +61,12 @@
         {@render row('WEAPON', event.profile?.weapon ?? 'Unknown')}
         {@render row('IMPACT RADIUS', event.profile ? `${event.profile.impact_radius_min}–${event.profile.impact_radius_max} km` : 'N/A')}
       </div>
+
+      {#if inferActor(event.event_summary)}
+        <div class="space-y-1.5">
+          {@render row('ACTOR', inferActor(event.event_summary))}
+        </div>
+      {/if}
 
       <!-- Chemicals -->
       {#if event.profile?.chemicals?.length}

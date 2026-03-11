@@ -1,11 +1,23 @@
 <script>
   import { getTotalCO2e, formatEquivalency } from '../../data-pipeline/co2-calc/co2Calc.js'
 
-  let { events = [] } = $props()
+  let { events = [], lastStrikesFetch = null, lastFiresFetch = null, lastAqiFetch = null } = $props()
+
+  let tick = $state(0)
+  $effect(() => { const id = setInterval(() => tick++, 30000); return () => clearInterval(id) })
+
+  function minsAgo(ts) {
+    if (!ts) return '—'
+    return Math.floor((Date.now() - ts) / 60000) + 'm'
+  }
+
+  let strikesAge = $derived(tick >= 0 ? minsAgo(lastStrikesFetch) : '—')
+  let firesAge = $derived(tick >= 0 ? minsAgo(lastFiresFetch) : '—')
+  let aqiAge = $derived(tick >= 0 ? minsAgo(lastAqiFetch) : '—')
 
   function parseCasualties(str) {
-    if (!str || str === '0') return 0
-    const nums = str.match(/\d+/g)
+    if (!str || str === '0' || str === 0) return 0
+    const nums = String(str).match(/\d+/g)
     return nums ? nums.reduce((s, n) => s + parseInt(n), 0) : 0
   }
 
@@ -61,8 +73,15 @@
     </div>
   {/if}
 
-  <div class="ml-auto flex items-center gap-2 shrink-0">
-    <span class="w-2 h-2 rounded-full bg-toxred animate-pulse inline-block"></span>
-    <span class="text-toxred text-xs font-orbitron tracking-widest">LIVE</span>
+  <div class="ml-auto flex items-center gap-4 shrink-0">
+    <div class="text-[9px] text-[#333] tracking-wide hidden lg:flex gap-3">
+      <span>STRIKES <span class="text-[#555]">{strikesAge}</span></span>
+      <span>FIRES <span class="text-[#555]">{firesAge}</span></span>
+      <span>AQI <span class="text-[#555]">{aqiAge}</span></span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-toxred animate-pulse inline-block"></span>
+      <span class="text-toxred text-xs font-orbitron tracking-widest">LIVE</span>
+    </div>
   </div>
 </header>

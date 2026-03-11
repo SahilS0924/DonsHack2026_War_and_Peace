@@ -9,8 +9,8 @@ export function getTotalCO2e(events) {
 
 export function formatEquivalency(totalKg) {
   const tonnes = totalKg / 1000
-  if (tonnes >= 1000) return `\u2248 ${Math.round(tonnes / 0.25).toLocaleString()} village annual emissions`
-  if (tonnes >= 100)  return `\u2248 ${Math.round(tonnes * 4000).toLocaleString()} km driven`
-  if (tonnes >= 10)   return `\u2248 ${Math.round(tonnes / 0.7).toLocaleString()} person-years`
-  return `\u2248 ${Math.round(totalKg / 225).toLocaleString()} LHR\u2013JFK flights`
+  if (tonnes >= 1000) return `\u2248 ${Math.round(tonnes / 1000).toLocaleString()} village annual emissions`
+  if (tonnes >= 100)  return `\u2248 ${Math.round(tonnes * 5000).toLocaleString()} km driven`
+  if (tonnes >= 10)   return `\u2248 ${Math.round(tonnes / 10).toLocaleString()} person-years`
+  return `\u2248 ${Math.round(totalKg / 250).toLocaleString()} LHR\u2013JFK flights`
 }

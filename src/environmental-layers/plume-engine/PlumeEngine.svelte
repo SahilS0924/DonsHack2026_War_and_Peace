@@ -189,6 +189,7 @@
   })
 
   onDestroy(() => {
+    if (!map) return
     if (map.getLayer(LAYER_OUTLINE_ID)) map.removeLayer(LAYER_OUTLINE_ID)
     if (map.getLayer(LAYER_ID)) map.removeLayer(LAYER_ID)
     if (map.getSource(SOURCE_ID)) map.removeSource(SOURCE_ID)

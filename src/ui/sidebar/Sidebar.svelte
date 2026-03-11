@@ -65,6 +65,9 @@
             <div class="text-[11px] text-[#ccc] leading-tight truncate">{event.type}</div>
             <div class="text-[10px] text-[#555] mt-0.5 leading-tight line-clamp-2">{event.event_summary}</div>
             <div class="text-[9px] text-[#333] mt-1">{formatTime(event.timestamp)}</div>
+            {#if event.confidence}
+              <div class="text-[9px] mt-0.5 text-[#555]">CONF: <span class="text-[#888]">{event.confidence}</span></div>
+            {/if}
             {#if event.co2e_estimate}
               <div class="text-[9px] mt-0.5" style="color:{color}55;">{event.co2e_estimate.toLocaleString()} kg CO\u2082e est.</div>
             {/if}

@@ -2,10 +2,10 @@
   import { onMount, onDestroy } from 'svelte'
   import maplibregl from 'maplibre-gl'
 
-  let { map } = $props()
+  let { map, onAqiLoad = () => {} } = $props()
 
-  const TOKEN = 'c1e8f5369c003f851d54fb2792e9053978ac3b9e'
-  const CITY_SLUGS = ['tehran', 'baghdad', 'kuwait', 'dubai', 'tel-aviv', 'riyadh']
+  const TOKEN = import.meta.env.VITE_AQICN_TOKEN
+  const CITY_SLUGS = ['tehran', 'baghdad', 'kuwait', 'dubai', 'tel-aviv', 'riyadh', 'beirut']
   const SOURCE_ID = 'aqi-halos'
   const HALO_LAYER = 'aqi-halos-fill'
   const DOTS_SOURCE = 'aqi-dots'
@@ -92,6 +92,7 @@
       if (map.getSource(DOTS_SOURCE)) {
         map.getSource(DOTS_SOURCE).setData({ type: 'FeatureCollection', features: dots })
       }
+      onAqiLoad()
     } catch {}
   }
 
